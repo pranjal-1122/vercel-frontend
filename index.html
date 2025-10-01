@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-Buddy - Earn Rewards with Your Idle Internet</title>
+    <link rel="stylesheet" href="index.css">
+
+    <!-- Firebase SDKs (Compat version) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+</head>
+
+<body>
+    <div class="gradient-bg"></div>
+
+    <div class="container">
+        <!-- Navigation -->
+        <nav>
+            <div class="logo">B-Buddy</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#docs">Docs</a></li>
+            </ul>
+            <a href="#cta" class="cta-button">Launch App</a>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1 class="floating">Manage Your Fund Smartly<br>With B-Buddy</h1>
+            <p class="subtitle">B-buddy your personal finance smart web app designed to build better money habits through personalized budgeting, real-time alerts, and visual insights.</p>
+            <div class="hero-buttons">
+                <a href="#" class="primary-btn">About Us</a>
+                <a href="#" class="secondary-btn">Learn More</a>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">Manage</div>
+                    <div class="stat-label">Money</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">Save</div>
+                    <div class="stat-label">More</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">Spend</div>
+                    <div class="stat-label">Less</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <h2 class="section-title">Why Choose B-Buddy?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Minimize Your Spending</h3>
+                    <p>Helps in saving money by providing data visually through pie-chart.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Safe And Secure</h3>
+                    <p>Data is handle by firebase database(provided by google) which keeps your data SAFE AND SECURE so Your data remains secure and private. We never access your personal information
+                    .</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Web Based App</h3>
+                    <p>Its a web based app so there is no need to download any shady application/apk
+                        .</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Low-End Friendly</h3>
+                    <p>A web app designed to run smoothly even on low-end devices, ensuring accessibility for everyone.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real Time Alerts</h3>
+                    <p>Stay ahead with instant notifications on your spending and savings. Get timely updates that help you make smarter financial decisions—right when it matters.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>Easy To Use Interface</h3>
+                    <p>Designed for everyone—simple, clean, and easy to navigate. Whether you’re a beginner or a pro, our dashboard makes managing money effortless..</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="how-it-works" id="how-it-works">
+            <div class="container">
+                <h2 class="section-title">How It Works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Track Your Spending Instantly</h3>
+                        <p>Connect your expenses and see where your money goes—no guesswork, just clarity.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Visualize With Purpose</h3>
+                        <p>Your spending is transformed into intuitive pie charts, helping you spot patterns and make smarter choices.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Save Smarter, Reach Faster</h3>
+                        <p>Set savings goals and get nudges that help you cut unnecessary costs and stay on track—without feeling restricted.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section - Signup -->
+        <section class="cta-section" id="cta">
+            <div class="cta-box" id="signupBox">
+                <h2>Create Your Account</h2>
+                <p>Join B-Buddy and start earning today</p>
+
+                <!-- Email Step -->
+                <div id="emailStep" class="auth-form">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                        <span class="error-message" id="emailError"></span>
+                    </div>
+                    <button class="submit-btn" id="sendOtpBtn">Send OTP</button>
+                    <p class="auth-switch">Already have an account? <a href="#" id="switchToLogin">Log in</a></p>
+                </div>
+
+                <!-- OTP Step -->
+                <div id="otpStep" class="auth-form" style="display: none;">
+                    <p class="email-display">OTP sent to <strong id="displayEmail"></strong></p>
+                    <div class="form-group">
+                        <label>Enter OTP</label>
+                        <div class="otp-inputs">
+                            <input type="text" class="otp-input" maxlength="1" data-index="0">
+                            <input type="text" class="otp-input" maxlength="1" data-index="1">
+                            <input type="text" class="otp-input" maxlength="1" data-index="2">
+                            <input type="text" class="otp-input" maxlength="1" data-index="3">
+                            <input type="text" class="otp-input" maxlength="1" data-index="4">
+                            <input type="text" class="otp-input" maxlength="1" data-index="5">
+                        </div>
+                        <span class="error-message" id="otpError"></span>
+                        <span class="success-message" id="otpSuccess"></span>
+                    </div>
+                    <button class="submit-btn" id="verifyOtpBtn">Verify OTP</button>
+                    <div>
+                        <a class="resend-link" id="resendOtp">Resend OTP</a>
+                        <a class="change-email-link" id="changeEmail">Change Email</a>
+                    </div>
+                </div>
+
+                <!-- User Info Step - Added Password Field -->
+                <div id="userInfoStep" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="Choose a username" required>
+                        <span class="error-message" id="usernameError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Create a password (min 6 characters)"
+                            required>
+                        <span class="error-message" id="passwordError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                        <span class="error-message" id="confirmPasswordError"></span>
+                    </div>
+                    <button class="submit-btn" id="confirmBtn">Create Account</button>
+                </div>
+            </div>
+
+            <!-- Login Box (Initially Hidden) -->
+            <div class="cta-box" id="loginBox" style="display: none;">
+                <h2>Welcome Back</h2>
+                <p>Log in to your B-Buddy account</p>
+
+                <div class="auth-form">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                        <span class="error-message" id="loginEmailError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                        <a href="#" class="forgot-password-link" id="forgotPasswordLink">Forgot password?</a>
+                        <span class="error-message" id="loginPasswordError"></span>
+                    </div>
+                    <button class="submit-btn" id="loginBtn">Log In</button>
+                    <p class="auth-switch">New here? <a href="#" id="switchToSignup">Sign up</a></p>
+                </div>
+            </div>
+
+            <!-- Reset Password Box (Initially Hidden) -->
+            <div class="cta-box" id="resetPasswordBox" style="display: none;">
+                <h2>Reset Password</h2>
+                <p>Enter your email to receive a password reset link</p>
+
+                <div class="auth-form">
+                    <div class="form-group">
+                        <label for="resetEmail">Email Address</label>
+                        <input type="email" id="resetEmail" placeholder="Enter your email" required>
+                        <span class="error-message" id="resetEmailError"></span>
+                        <span class="success-message" id="resetEmailSuccess"></span>
+                    </div>
+                    <button class="submit-btn" id="resetPasswordBtn">Send Reset Link</button>
+                    <p class="auth-switch"><a href="#" id="backToLogin">Back to login</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>B-Buddy</h3>
+                    <p>Decentralized AI training platform transforming unused internet bandwidth into real-time data
+                        pipelines for the future of AI.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Product</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Extension</a></li>
+                        <li><a href="#">Mobile App</a></li>
+                        <li><a href="#">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 B-Buddy. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>
