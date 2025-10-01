@@ -16,7 +16,10 @@ const auth = firebase.auth();
 const database = firebase.database();
 
 // Backend API URL
-const API_URL = 'http://localhost:3000';
+// const API_URL = 'http://localhost:3000';
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000' 
+    : 'https://vercel-backend-mu-two.vercel.app';  // Replace with your actual backend URL after deployment
 
 // Auth System Variables
 let userEmail = '';
