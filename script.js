@@ -16,10 +16,10 @@ const auth = firebase.auth();
 const database = firebase.database();
 
 // Backend API URL
-// const API_URL = 'http://localhost:3000';
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000' 
-    : 'https://vercel-backend-mu-two.vercel.app';  // Replace with your actual backend URL after deployment
+const API_URL = 'http://localhost:3000';
+// const API_URL = window.location.hostname === 'localhost' 
+//     ? 'http://localhost:3000' 
+//     : 'https://vercel-backend-mu-two.vercel.app';  // Replace with your actual backend URL after deployment
 
 // Auth System Variables
 let userEmail = '';
@@ -533,24 +533,39 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Parallax effect
+// Improved Parallax effect - only affects hero elements, prevents overlap
 window.addEventListener('scroll', () => {
     const scrolled = window.pageYOffset;
     const heroTitle = document.querySelector('.hero h1');
     const heroSubtitle = document.querySelector('.hero .subtitle');
     const heroButtons = document.querySelector('.hero-buttons');
-
-    if (heroTitle && scrolled < 400) {
-        heroTitle.style.transform = `translateY(${scrolled * 0.3}px)`;
-        heroTitle.style.opacity = 1 - (scrolled * 0.002);
-    }
-    if (heroSubtitle && scrolled < 400) {
-        heroSubtitle.style.transform = `translateY(${scrolled * 0.3}px)`;
-        heroSubtitle.style.opacity = 1 - (scrolled * 0.002);
-    }
-    if (heroButtons && scrolled < 400) {
-        heroButtons.style.transform = `translateY(${scrolled * 0.3}px)`;
-        heroButtons.style.opacity = 1 - (scrolled * 0.002);
+    const heroSection = document.querySelector('.hero');
+    
+    // Only apply parallax when we're actually in the hero section
+    if (heroSection && scrolled < heroSection.offsetHeight) {
+        if (heroTitle) {
+            heroTitle.style.transform = `translateY(${scrolled * 0.5}px)`;
+            heroTitle.style.opacity = Math.max(0, 1 - (scrolled * 0.003));
+        }
+        if (heroSubtitle) {
+            heroSubtitle.style.transform = `translateY(${scrolled * 0.4}px)`;
+            heroSubtitle.style.opacity = Math.max(0, 1 - (scrolled * 0.003));
+        }
+        if (heroButtons) {
+            heroButtons.style.transform = `translateY(${scrolled * 0.3}px)`;
+            heroButtons.style.opacity = Math.max(0, 1 - (scrolled * 0.003));
+        }
+    } else {
+        // Reset when scrolled past hero
+        if (heroTitle) {
+            heroTitle.style.opacity = '0';
+        }
+        if (heroSubtitle) {
+            heroSubtitle.style.opacity = '0';
+        }
+        if (heroButtons) {
+            heroButtons.style.opacity = '0';
+        }
     }
 });
 
