@@ -1,14 +1,17 @@
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDMRi-j71wruX5UPFg1kB2pbB99q0Sp9qk",
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "b-buddy-4c0a7.firebaseapp.com",
-    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "https://b-buddy-4c0a7-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "b-buddy-4c0a7",
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "b-buddy-4c0a7.firebasestorage.app",
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "1046417860101",
-    appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:1046417860101:web:80dd34f12c5dc06dd65e6c",
-    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-39M5NFMMMQ"
-};
+// const firebaseConfig = {
+//     apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDMRi-j71wruX5UPFg1kB2pbB99q0Sp9qk",
+//     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "b-buddy-4c0a7.firebaseapp.com",
+//     databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "https://b-buddy-4c0a7-default-rtdb.asia-southeast1.firebasedatabase.app",
+//     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "b-buddy-4c0a7",
+//     storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "b-buddy-4c0a7.firebasestorage.app",
+//     messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "1046417860101",
+//     appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:1046417860101:web:80dd34f12c5dc06dd65e6c",
+//     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-39M5NFMMMQ"
+// };
+
+// Use config from config.js
+const firebaseConfig = CONFIG.firebase;
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -21,10 +24,7 @@ const database = firebase.database();
 //     ? 'http://localhost:3000'
 //     : 'https://vercel-backend-mu-two.vercel.app';  // Replace with your actual backend URL after deployment (for vercel)
 
-const API_URL = import.meta.env.VITE_API_URL || 
-    (window.location.hostname === 'localhost' 
-        ? 'http://localhost:3000' 
-        : 'https://vercel-backend-mu-two.vercel.app');
+const API_URL = CONFIG.getApiUrl();
 
 // Auth System Variables
 let userEmail = '';
