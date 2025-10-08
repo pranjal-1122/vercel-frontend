@@ -17,9 +17,14 @@ const database = firebase.database();
 
 // Backend API URL
 //const API_URL = 'http://localhost:3000';  // (for local run )
-const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:3000'
-    : 'https://vercel-backend-mu-two.vercel.app';  // Replace with your actual backend URL after deployment (for vercel)
+// const API_URL = window.location.hostname === 'localhost'
+//     ? 'http://localhost:3000'
+//     : 'https://vercel-backend-mu-two.vercel.app';  // Replace with your actual backend URL after deployment (for vercel)
+
+const API_URL = import.meta.env.VITE_API_URL || 
+    (window.location.hostname === 'localhost' 
+        ? 'http://localhost:3000' 
+        : 'https://vercel-backend-mu-two.vercel.app');
 
 // Auth System Variables
 let userEmail = '';
