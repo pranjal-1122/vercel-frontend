@@ -633,7 +633,7 @@ footer {
 .how-it-works,
 .cta-section {
     position: relative;
-    /* background: #0a0a0f; */ 
+    /* background: #0a0a0f; */
     z-index: 2;
 }
 
@@ -1128,12 +1128,36 @@ footer {
         font-size: 56px;
     }
 }
-#signupBox {
-  max-width: 1000px;
-  margin: auto;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+
+/* User Type Selection Styling */
+.form-select {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 16px;
+    transition: all 0.3s;
+    cursor: pointer;
 }
 
+.form-select:focus {
+    outline: none;
+    border-color: #667eea;
+    background: rgba(255, 255, 255, 0.08);
+}
 
+.form-select option {
+    background: #1a1d2e;
+    color: #ffffff;
+    padding: 10px;
+}
+
+#signupBox {
+    max-width: 1000px;
+    margin: auto;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}

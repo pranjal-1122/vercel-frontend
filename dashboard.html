@@ -6,433 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B-Buddy Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #1a1d2e;
-            min-height: 100vh;
-            color: #e4e4e7;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        header {
-            background: #1a1d2e;
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            animation: slideDown 0.5s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #8b85ff;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-name {
-            color: #e4e4e7;
-            font-size: 15px;
-            font-weight: 500;
-        }
-
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #8b85ff 0%, #a78bfa 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .dashboard-header {
-            padding: 40px 0 30px;
-        }
-
-        .dashboard-title {
-            font-size: 32px;
-            font-weight: bold;
-            color: #fafafa;
-            margin-bottom: 8px;
-        }
-
-        .dashboard-subtitle {
-            color: #a1a1aa;
-            font-size: 16px;
-        }
-
-        .summary-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: #252938;
-            padding: 30px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-            animation: fadeIn 0.5s ease;
-            cursor: pointer;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(139, 133, 255, 0.3);
-            box-shadow: 0 10px 40px rgba(139, 133, 255, 0.1);
-            
-        }
-
-        .card-title {
-            font-size: 13px;
-            color: #a1a1aa;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 500;
-        }
-
-        .card-value {
-            font-size: 36px;
-            font-weight: bold;
-            color: #fafafa;
-            margin-bottom: 8px;
-        }
-
-        .card-subtitle {
-            font-size: 14px;
-            color: #71717a;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #3f3f46;
-            border-radius: 10px;
-            margin-top: 15px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #8b85ff 0%, #a78bfa 100%);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        @media (max-width: 968px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .chart-card {
-            background: #252938;
-            padding: 30px;
-            padding-bottom: 54px;
-            border-radius: 95px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .chart-container {
-            position: relative;
-            height: 350px;
-            width: 800px;
-            cursor: pointer;
-        }
-
-        .chart-container:hover {
-            opacity: 0.9;
-            ;
-        }
-
-        .section-title {
-            font-size: 36px;
-            font-weight: 600;
-            justify-content: center;
-            display: flex;
-            align-self: center;
-            color: #fafafa;
-            margin-bottom: 25px;
-        }
-
-        .transactions-list {
-            max-height: 800px;
-            overflow-y: auto;
-        }
-
-        .transactions-list::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .transactions-list::-webkit-scrollbar-track {
-            background: #3f3f46;
-            border-radius: 10px;
-        }
-
-        .transactions-list::-webkit-scrollbar-thumb {
-            background: #52525b;
-            border-radius: 10px;
-        }
-
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px;
-            background: #2d3142;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
-
-        .transaction-item:hover {
-            background: #343647;
-            transform: translateX(5px);
-            border-color: rgba(139, 133, 255, 0.2);
-        }
-
-        .transaction-info {
-            flex: 1;
-        }
-
-        .transaction-category {
-            font-weight: 600;
-            color: #fafafa;
-            margin-bottom: 5px;
-            font-size: 29px;
-        }
-
-        .transaction-desc {
-            font-size: 23px;
-            color: #a1a1aa;
-        }
-
-        .transaction-amount {
-            font-size: 30px;
-            font-weight: bold;
-            color: #ef4444;
-        }
-
-        .add-expense-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #8b85ff 0%, #a78bfa 100%);
-            border: none;
-            color: white;
-            font-size: 30px;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(139, 133, 255, 0.4);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .add-expense-btn:hover {
-            transform: scale(1.1) rotate(90deg);
-            box-shadow: 0 15px 40px rgba(139, 133, 255, 0.6);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-content {
-            background: #252938;
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            animation: scaleIn 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        @keyframes scaleIn {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #fafafa;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 30px;
-            color: #71717a;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .close-btn:hover {
-            color: #fafafa;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            color: #a1a1aa;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .form-input,
-        .form-select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #3f3f46;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #2d3142;
-            color: #fafafa;
-        }
-
-        .form-input:focus,
-        .form-select:focus {
-            outline: none;
-            border-color: #8b85ff;
-            background: #343647;
-        }
-
-        .form-select option {
-            background: #252938;
-            color: #fafafa;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #8b85ff 0%, #a78bfa 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(139, 133, 255, 0.4);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #71717a;
-        }
-
-        .empty-state-icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-
-        .empty-state p {
-            font-size: 15px;
-        }
-    </style>
+    <link rel="stylesheet" href="dashboard.css">     
 </head>
 
 <body>
@@ -440,10 +14,26 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">B-Buddy</div>
+
+
+                <!-- User Info & Avatar -->
                 <div class="user-info">
                     <span class="user-name" id="userName">Demo User</span>
                     <div class="user-avatar" id="userAvatar">D</div>
+
+                    <!-- Dropdown Menu -->
+                    <div class="dropdown-menu" id="userDropdown">
+                        <div class="dropdown-item" id="budgetMenuItem">
+                            <span class="dropdown-item-icon">⚙️</span>
+                            <span>Budget Settings</span>
+                        </div>
+                        <div class="dropdown-item danger" id="logoutMenuItem">
+                            <span class="dropdown-item-icon">🚪</span>
+                            <span>Log Out</span>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </header>
@@ -532,12 +122,10 @@
     </div>
 
     <script type="module">
-        // Firebase configuration (user should replace with their own)
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-        import { getDatabase, ref, onValue, push, set } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js';
+        import { getDatabase, ref, onValue, push, set, update } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js';
         import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 
-        // Initialize Firebase (Replace with your config)
         const firebaseConfig = {
             apiKey: "AIzaSyDMRi-j71wruX5UPFg1kB2pbB99q0Sp9qk",
             authDomain: "b-buddy-4c0a7.firebaseapp.com",
@@ -553,35 +141,43 @@
         const db = getDatabase(app);
         const auth = getAuth(app);
 
-        let currentUser = { uid: 'demo-user' };
+        let currentUser = null;
         let chartInstance = null;
+        let isRealUser = false;
 
         // Demo data for testing
         const demoData = {
-            budget: 15000,
+            budget: 10000,
             savingsGoal: 5000,
-            currentSavings: 2500,
-            expenses: {
-                exp1: { amount: 1200, category: "Food", description: "Groceries", timestamp: Date.now() - 86400000 },
-                exp2: { amount: 800, category: "Transport", description: "Fuel", timestamp: Date.now() - 172800000 },
-                exp3: { amount: 2500, category: "Shopping", description: "Clothes", timestamp: Date.now() - 259200000 },
-                exp4: { amount: 500, category: "Entertainment", description: "Movie tickets", timestamp: Date.now() - 345600000 },
-                exp5: { amount: 1500, category: "Bills", description: "Electricity", timestamp: Date.now() - 432000000 },
-                exp6: { amount: 300, category: "Food", description: "Restaurant", timestamp: Date.now() - 518400000 }
-            }
+            currentSavings: 0,
+            expenses: {}
         };
 
-        // Initialize with demo data
-        updateDashboard(demoData);
+        // // After user is created successfully in signup process
+        // const userRef = firebase.database().ref('users/' + user.uid);
+        // userRef.set({
+        //     username: username,
+        //     email: email,
+        //     budget: 10000,  // Default budget
+        //     savingsGoal: 5000,  // Default savings goal
+        //     currentSavings: 0,  // Starting savings
+        //     expenses: {}
+        // });
 
         // Auth state listener
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
+                isRealUser = true;
                 const displayName = user.displayName || user.email.split('@')[0];
                 document.getElementById('userName').textContent = displayName;
                 document.getElementById('userAvatar').textContent = displayName[0].toUpperCase();
                 loadUserData(user.uid);
+            } else {
+                // Demo mode
+                currentUser = { uid: 'demo-user' };
+                isRealUser = false;
+                updateDashboard(demoData);
             }
         });
 
@@ -592,6 +188,16 @@
                 const data = snapshot.val();
                 if (data) {
                     updateDashboard(data);
+                } else {
+                    // Initialize new user with default values
+                    const defaultData = {
+                        budget: 10000,
+                        savingsGoal: 5000,
+                        currentSavings: 0,
+                        expenses: {}
+                    };
+                    set(userRef, defaultData);
+                    updateDashboard(defaultData);
                 }
             });
         }
@@ -603,7 +209,6 @@
             const savingsGoal = data.savingsGoal || 5000;
             const currentSavings = data.currentSavings || 0;
 
-            // Calculate total spent
             let totalSpent = 0;
             const categoryTotals = {};
             const transactionsArray = [];
@@ -614,7 +219,6 @@
                 transactionsArray.push({ id, ...expense });
             });
 
-            // Update summary cards
             document.getElementById('totalSpent').textContent = `₹${totalSpent.toFixed(2)}`;
             document.getElementById('remainingBudget').textContent = `₹${(budget - totalSpent).toFixed(2)}`;
 
@@ -623,17 +227,13 @@
             document.getElementById('savingsSubtitle').textContent = `₹${currentSavings} of ₹${savingsGoal}`;
             document.getElementById('savingsBar').style.width = `${savingsPercent}%`;
 
-            // Update chart
             updateChart(categoryTotals);
-
-            // Update transactions list
             updateTransactionsList(transactionsArray);
         }
 
         // Update spending chart
         function updateChart(categoryTotals) {
             const ctx = document.getElementById('spendingChart').getContext('2d');
-
             const categories = Object.keys(categoryTotals);
             const amounts = Object.values(categoryTotals);
 
@@ -670,9 +270,7 @@
                             position: 'bottom',
                             labels: {
                                 padding: 20,
-                                font: {
-                                    size: 13
-                                },
+                                font: { size: 13 },
                                 color: '#a1a1aa',
                                 usePointStyle: true,
                                 pointStyle: 'circle'
@@ -685,7 +283,6 @@
                             borderColor: '#3f3f46',
                             borderWidth: 1,
                             padding: 12,
-                            displayColors: true,
                             callbacks: {
                                 label: function (context) {
                                     return context.label + ': ₹' + context.parsed.toFixed(2);
@@ -703,80 +300,152 @@
 
             if (transactions.length === 0) {
                 list.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📊</div>
-                        <p>No transactions yet. Add your first expense!</p>
-                    </div>
-                `;
+                <div class="empty-state">
+                    <div class="empty-state-icon">📊</div>
+                    <p>No transactions yet. Add your first expense!</p>
+                </div>
+            `;
                 return;
             }
 
-            // Sort by timestamp (newest first)
             transactions.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
             list.innerHTML = transactions.slice(0, 10).map(t => `
-                <div class="transaction-item">
-                    <div class="transaction-info">
-                        <div class="transaction-category">${t.category}</div>
-                        <div class="transaction-desc">${t.description}</div>
-                    </div>
-                    <div class="transaction-amount">₹${parseFloat(t.amount).toFixed(2)}</div>
+            <div class="transaction-item">
+                <div class="transaction-info">
+                    <div class="transaction-category">${t.category}</div>
+                    <div class="transaction-desc">${t.description}</div>
                 </div>
-            `).join('');
+                <div class="transaction-amount">₹${parseFloat(t.amount).toFixed(2)}</div>
+            </div>
+        `).join('');
         }
 
-        // Modal controls
-        const modal = document.getElementById('expenseModal');
+        // Modal controls - Expense Modal
+        const expenseModal = document.getElementById('expenseModal');
         const addBtn = document.getElementById('addExpenseBtn');
         const closeBtn = document.getElementById('closeModal');
 
-        addBtn.addEventListener('click', () => {
-            modal.classList.add('active');
+        addBtn.addEventListener('click', () => expenseModal.classList.add('active'));
+        closeBtn.addEventListener('click', () => expenseModal.classList.remove('active'));
+        expenseModal.addEventListener('click', (e) => {
+            if (e.target === expenseModal) expenseModal.classList.remove('active');
         });
 
-        closeBtn.addEventListener('click', () => {
-            modal.classList.remove('active');
+        // Modal controls - Budget Modal (NEW)
+
+        const budgetModal = document.getElementById('budgetModal');
+        const budgetMenuItem = document.getElementById('budgetMenuItem');
+        const closeBudgetBtn = document.getElementById('closeBudgetModal');
+        const userDropdown = document.getElementById('userDropdown');
+        const userAvatar = document.getElementById('userAvatar');
+
+        // Toggle dropdown on avatar click
+        userAvatar.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('active');
         });
 
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userDropdown.contains(e.target) && !userAvatar.contains(e.target)) {
+                userDropdown.classList.remove('active');
             }
+        });
+
+        budgetMenuItem.addEventListener('click', () => {
+            userDropdown.classList.remove('active');
+            if (isRealUser) {
+                const userRef = ref(db, `users/${currentUser.uid}`);
+                onValue(userRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        document.getElementById('monthlyBudget').value = data.budget || '';
+                        document.getElementById('savingsGoalInput').value = data.savingsGoal || '';
+                        document.getElementById('currentSavingsInput').value = data.currentSavings || '';
+                    }
+                }, { onlyOnce: true });
+            }
+            budgetModal.classList.add('active');
+        });
+
+        closeBudgetBtn.addEventListener('click', () => budgetModal.classList.remove('active'));
+        budgetModal.addEventListener('click', (e) => {
+            if (e.target === budgetModal) budgetModal.classList.remove('active');
+        });
+
+        // Logout functionality
+        document.getElementById('logoutMenuItem').addEventListener('click', () => {
+            userDropdown.classList.remove('active');
+            if (isRealUser) {
+                auth.signOut().then(() => {
+                    window.location.href = 'index.html';
+                }).catch((error) => {
+                    console.error('Logout error:', error);
+                    alert('Error logging out. Please try again.');
+                });
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Budget form submission
+        document.getElementById('budgetForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const budget = parseFloat(document.getElementById('monthlyBudget').value);
+            const savingsGoal = parseFloat(document.getElementById('savingsGoalInput').value);
+            const currentSavings = parseFloat(document.getElementById('currentSavingsInput').value);
+
+            if (isRealUser) {
+                const userRef = ref(db, `users/${currentUser.uid}`);
+                await update(userRef, {
+                    budget,
+                    savingsGoal,
+                    currentSavings
+                });
+                alert('Budget settings updated successfully!');
+            } else {
+                demoData.budget = budget;
+                demoData.savingsGoal = savingsGoal;
+                demoData.currentSavings = currentSavings;
+                updateDashboard(demoData);
+                alert('Budget settings updated (Demo Mode)');
+            }
+
+            budgetModal.classList.remove('active');
         });
 
         // Add expense form
         document.getElementById('expenseForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const amount = document.getElementById('expenseAmount').value;
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
             const category = document.getElementById('expenseCategory').value;
             const description = document.getElementById('expenseDescription').value;
 
             const expense = {
-                amount: parseFloat(amount),
+                amount,
                 category,
                 description,
                 timestamp: Date.now()
             };
 
-            if (currentUser && currentUser.uid !== 'demo-user') {
-                // Save to Firebase if real user
+            if (isRealUser) {
                 const expensesRef = ref(db, `users/${currentUser.uid}/expenses`);
                 const newExpenseRef = push(expensesRef);
                 await set(newExpenseRef, expense);
             } else {
-                // Add to demo data
                 const expenseId = 'exp' + Date.now();
                 demoData.expenses[expenseId] = expense;
                 updateDashboard(demoData);
             }
 
-            // Reset form and close modal
             e.target.reset();
-            modal.classList.remove('active');
+            expenseModal.classList.remove('active');
         });
 
-        // Scroll to chart when Total Spent card is clicked
+        // Scroll to chart
         document.getElementById('totalSpentCard').addEventListener('click', () => {
             document.getElementById('chartSection').scrollIntoView({
                 behavior: 'smooth',
@@ -784,19 +453,45 @@
             });
         });
 
-        // Open detailed spending page when chart is clicked
+        // Chart click handler
         document.getElementById('chartContainer').addEventListener('click', () => {
-            // Encode current data as URL parameter
-            const currentData = {
+            const currentData = isRealUser ? {} : {
                 expenses: demoData.expenses,
                 budget: demoData.budget
             };
             const dataStr = encodeURIComponent(JSON.stringify(currentData));
-
-            // Open detailed spending page with data
             window.open('spending-details.html?data=' + dataStr, '_blank');
         });
     </script>
+
+    <!-- Testing -->
+    <!-- Budget Settings Modal -->
+    <div class="modal" id="budgetModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Budget Settings</div>
+                <button class="close-btn" id="closeBudgetModal">&times;</button>
+            </div>
+            <form id="budgetForm">
+                <div class="form-group">
+                    <label class="form-label">Monthly Budget (₹)</label>
+                    <input type="number" class="form-input" id="monthlyBudget" placeholder="15000" step="0.01"
+                        required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Savings Goal (₹)</label>
+                    <input type="number" class="form-input" id="savingsGoalInput" placeholder="5000" step="0.01"
+                        required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Current Savings (₹)</label>
+                    <input type="number" class="form-input" id="currentSavingsInput" placeholder="2500" step="0.01"
+                        required />
+                </div>
+                <button type="submit" class="submit-btn">Save Budget</button>
+            </form>
+        </div>
+    </div>
 </body>
 
 </html>

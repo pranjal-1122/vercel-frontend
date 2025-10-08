@@ -16,10 +16,10 @@ const auth = firebase.auth();
 const database = firebase.database();
 
 // Backend API URL
-// const API_URL = 'http://localhost:3000';  // (for local run )
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000' 
-    : 'https://vercel-backend-mu-two.vercel.app';  // Replace with your actual backend URL after deployment (for vercel)
+const API_URL = 'http://localhost:3000';  // (for local run )
+// const API_URL = window.location.hostname === 'localhost'
+//     ? 'http://localhost:3000'
+//     : 'https://vercel-backend-mu-two.vercel.app';  // Replace with your actual backend URL after deployment (for vercel)
 
 // Auth System Variables
 let userEmail = '';
@@ -252,20 +252,25 @@ document.getElementById('changeEmail').addEventListener('click', function () {
     document.getElementById('email').value = userEmail;
     document.getElementById('email').focus();
 });
-
 // Complete Signup with Firebase
 document.getElementById('confirmBtn').addEventListener('click', async function () {
     const username = document.getElementById('username').value.trim();
+    const userType = document.getElementById('userType').value;
+    const userAge = document.getElementById('userAge').value;
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
 
     const usernameError = document.getElementById('usernameError');
+    const userTypeError = document.getElementById('userTypeError');
+    const userAgeError = document.getElementById('userAgeError');
     const passwordError = document.getElementById('passwordError');
     const confirmPasswordError = document.getElementById('confirmPasswordError');
     const confirmBtn = this;
 
     // Reset errors
     usernameError.style.display = 'none';
+    userTypeError.style.display = 'none';
+    userAgeError.style.display = 'none';
     passwordError.style.display = 'none';
     confirmPasswordError.style.display = 'none';
 
@@ -279,6 +284,34 @@ document.getElementById('confirmBtn').addEventListener('click', async function (
     if (username.length < 3) {
         usernameError.textContent = 'Username must be at least 3 characters';
         usernameError.style.display = 'block';
+        return;
+    }
+
+    // Validate age FIRST
+    if (!userAge) {
+        userAgeError.textContent = 'Please enter your age';
+        userAgeError.style.display = 'block';
+        return;
+    }
+
+    const age = parseInt(userAge);
+    
+    if (age < 13) {
+        userAgeError.textContent = 'You must be at least 13 years old';
+        userAgeError.style.display = 'block';
+        return;
+    }
+
+    if (age > 100) {
+        userAgeError.textContent = 'Please enter a valid age';
+        userAgeError.style.display = 'block';
+        return;
+    }
+
+    // Validate user type
+    if (!userType) {
+        userTypeError.textContent = 'Please select your profile type';
+        userTypeError.style.display = 'block';
         return;
     }
 
@@ -314,25 +347,50 @@ document.getElementById('confirmBtn').addEventListener('click', async function (
         await database.ref('users/' + user.uid).set({
             username: username,
             email: userEmail,
+            userType: userType,
+            age: parseInt(userAge),
+            budget: userType === 'student' ? 5000 : 15000,
+            savingsGoal: userType === 'student' ? 2000 : 7000,
+            currentSavings: 0,
+            expenses: {},
             createdAt: new Date().toISOString()
         });
 
         console.log('User registered:', user.uid);
+        console.log('User type:', userType);
+        console.log('User age:', userAge);
         alert(`Welcome, ${username}! Your account has been created successfully.`);
+
+        // Store userType for redirect
+        const selectedUserType = userType;
 
         // Show success screen with Welcome Aboard button
         document.querySelector('#signupBox h2').textContent = 'Welcome to B-Buddy!';
         document.querySelector('#signupBox p').textContent = `Account created for ${username}`;
         document.getElementById('userInfoStep').innerHTML = `
-            <div style="text-align: center; padding: 40px 0;">
-                <div style="font-size: 60px; margin-bottom: 20px;">✅</div>
-                <h3 style="font-size: 24px; margin-bottom: 12px;">Registration Complete</h3>
-                <p style="color: #94a3b8; margin-bottom: 30px;">You can now start earning with B-Buddy</p>
-                <button class="welcome-aboard-btn" onclick="window.location.href='dashboard.html'">
-                    Welcome Aboard - Go to Dashboard
-                </button>
-            </div>
-        `;
+        <div style="text-align: center; padding: 40px 0;">
+            <div style="font-size: 60px; margin-bottom: 20px;">✅</div>
+            <h3 style="font-size: 24px; margin-bottom: 12px;">Registration Complete</h3>
+            <p style="color: #94a3b8; margin-bottom: 30px;">You can now start managing your finances with B-Buddy</p>
+            <button class="welcome-aboard-btn" id="redirectBtn">
+                Welcome Aboard - Go to Dashboard
+            </button>
+        </div>
+    `;
+
+        // Redirect based on user type
+        setTimeout(() => {
+            const redirectBtn = document.getElementById('redirectBtn');
+            if (redirectBtn) {
+                redirectBtn.addEventListener('click', function () {
+                    if (selectedUserType === 'professional') {
+                        window.location.href = 'professional-dashboard.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                });
+            }
+        }, 100);
 
     } catch (error) {
         console.error('Error creating account:', error);
@@ -401,19 +459,13 @@ document.getElementById('loginBtn').addEventListener('click', async function () 
         console.log('User logged in:', user.uid);
         alert(`Welcome back, ${userData.username}!`);
 
-        // Show success screen with Welcome Aboard button
-        document.querySelector('#loginBox h2').textContent = 'Login Successful!';
-        document.querySelector('#loginBox p').textContent = `Welcome back, ${userData.username}`;
-        document.querySelector('#loginBox .auth-form').innerHTML = `
-            <div style="text-align: center; padding: 40px 0;">
-                <div style="font-size: 60px; margin-bottom: 20px;">✅</div>
-                <h3 style="font-size: 24px; margin-bottom: 12px;">Login Successful</h3>
-                <p style="color: #94a3b8; margin-bottom: 30px;">Redirecting to dashboard...</p>
-                <button class="welcome-aboard-btn" onclick="window.location.href='dashboard.html'">
-                    Welcome Aboard - Go to Dashboard
-                </button>
-            </div>
-        `;
+        // Redirect based on user type from database
+        if (userData.userType === 'professional') {
+            window.location.href = 'professional-dashboard.html';
+        } else {
+            window.location.href = 'dashboard.html';
+        }
+
 
     } catch (error) {
         console.error('Error logging in:', error);
@@ -540,7 +592,7 @@ window.addEventListener('scroll', () => {
     const heroSubtitle = document.querySelector('.hero .subtitle');
     const heroButtons = document.querySelector('.hero-buttons');
     const heroSection = document.querySelector('.hero');
-    
+
     // Only apply parallax when we're actually in the hero section
     if (heroSection && scrolled < heroSection.offsetHeight) {
         if (heroTitle) {
@@ -589,4 +641,63 @@ document.querySelectorAll('.feature-card, .step, .stat-card').forEach(el => {
     el.style.transform = 'translateY(30px)';
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     observer.observe(el);
+});
+
+// Real-time age validation and user type restriction
+document.getElementById('userAge').addEventListener('input', function () {
+    const age = parseInt(this.value);
+    const userTypeSelect = document.getElementById('userType');
+    const userTypeError = document.getElementById('userTypeError');
+
+    if (age && age < 23) {
+        userTypeSelect.value = 'student';
+        // Disable professional option
+        const professionalOption = userTypeSelect.querySelector('option[value="professional"]');
+        const studentOption = userTypeSelect.querySelector('option[value="student"]');
+        if (professionalOption) {
+            professionalOption.disabled = true;
+            professionalOption.textContent = '💼 Professional (Age 23+ required)';
+        }
+        if (studentOption) {
+            studentOption.disabled = false;
+        }
+        userTypeError.style.display = 'none';
+    } else if (age && age >= 23) {
+        // For users 23+, disable student and enable professional
+        const professionalOption = userTypeSelect.querySelector('option[value="professional"]');
+        const studentOption = userTypeSelect.querySelector('option[value="student"]');
+
+        if (professionalOption) {
+            professionalOption.disabled = false;
+            professionalOption.textContent = '💼 Professional';
+        }
+
+        // Disable student option for 23+ users
+        if (studentOption) {
+            studentOption.disabled = true;
+            studentOption.textContent = '🎓 Student (Under 23 only)';
+        }
+
+        // Auto-select professional
+        userTypeSelect.value = 'professional';
+        userTypeError.style.display = 'none';
+    }
+});
+
+// Prevent manual selection of professional for users under 23 AND student for 23+
+document.getElementById('userType').addEventListener('change', function () {
+    const age = parseInt(document.getElementById('userAge').value);
+    const userTypeError = document.getElementById('userTypeError');
+
+    if (age && age < 23 && this.value === 'professional') {
+        userTypeError.textContent = 'You must be at least 23 years old to select Professional';
+        userTypeError.style.display = 'block';
+        this.value = 'student';
+    } else if (age && age >= 23 && this.value === 'student') {
+        userTypeError.textContent = 'Users 23 years or older must select Professional';
+        userTypeError.style.display = 'block';
+        this.value = 'professional';
+    } else {
+        userTypeError.style.display = 'none';
+    }
 });

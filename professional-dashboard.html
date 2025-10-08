@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-Buddy Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="professional-dashboard.css">
+    <script type="module" src="professional-dashboard.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">B-Buddy</div>
+
+                <!-- User Info & Avatar -->
+                <div class="user-info">
+                    <span class="user-name" id="userName">Demo User</span>
+                    <div class="user-avatar" id="userAvatar">D</div>
+
+                    <!-- Dropdown Menu -->
+                    <div class="dropdown-menu" id="userDropdown">
+                        <div class="dropdown-item" id="budgetMenuItem">
+                            <span class="dropdown-item-icon">⚙️</span>
+                            <span>Budget Settings</span>
+                        </div>
+                        <div class="dropdown-item danger" id="logoutMenuItem">
+                            <span class="dropdown-item-icon">🚪</span>
+                            <span>Log Out</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-header">
+            <div class="dashboard-title">Financial Dashboard</div>
+            <div class="dashboard-subtitle">Track your expenses and manage your budget smartly</div>
+        </div>
+
+        <div class="summary-cards">
+            <div class="card" id="totalSpentCard">
+                <div class="card-title">Total Spent</div>
+                <div class="card-value" id="totalSpent">₹0.00</div>
+                <div class="card-subtitle">This month</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Remaining Budget</div>
+                <div class="card-value" id="remainingBudget">₹0.00</div>
+                <div class="card-subtitle">Available to spend</div>
+                <!-- Set Budget Button -->
+                <button class="set-budget-btn" id="setBudgetBtn">
+                    <span class="btn-icon"></span>
+                    <span>Set Monthly Budget</span>
+                </button>
+            </div>
+            <div class="card">
+                <div class="card-title">Highest Spent</div>
+                <div class="card-value highest-spent-amount" id="highestSpentAmount">₹0.00</div>
+                <div class="card-subtitle" id="highestSpentCategory">No category</div>
+                <div class="highest-spent-description" id="highestSpentDescription">No expenses recorded yet.</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="chart-card" id="chartSection">
+                <div class="section-title">Spending by Category</div>
+                <div class="chart-container" id="chartContainer">
+                    <canvas id="spendingChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="section-title">Recent Transactions</div>
+                <div class="transactions-list" id="transactionsList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <p>No transactions yet. Add your first expense!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Expense Button -->
+    <button class="add-expense-btn" id="addExpenseBtn">+</button>
+
+    <!-- Add Expense Modal -->
+    <div class="modal" id="expenseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Add New Expense</div>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="expenseForm">
+                <div class="form-group">
+                    <label class="form-label">Amount (₹)</label>
+                    <input type="number" class="form-input" id="expenseAmount" placeholder="0.00" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" id="expenseCategory" required>
+                        <option value="">Select a category</option>
+                        <option value="Food">🍔 Food</option>
+                        <option value="Transport">🚗 Transport</option>
+                        <option value="Shopping">🛍️ Shopping</option>
+                        <option value="Entertainment">🎮 Entertainment</option>
+                        <option value="Bills">💡 Bills</option>
+                        <option value="Health">💊 Health</option>
+                        <option value="Other">📦 Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <input type="text" class="form-input" id="expenseDescription" placeholder="What did you spend on?"
+                        required>
+                </div>
+                <button type="submit" class="submit-btn">Add Expense</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Budget Settings Modal -->
+    <div class="modal" id="budgetModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Set Monthly Budget</div>
+                <button class="close-btn" id="closeBudgetModal">&times;</button>
+            </div>
+            <form id="budgetForm">
+                <div class="form-group">
+                    <label class="form-label">Monthly Budget (₹)</label>
+                    <input type="number" class="form-input" id="budgetAmount" placeholder="15000" step="0.01"
+                        required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Savings Goal (₹)</label>
+                    <input type="number" class="form-input" id="savingsGoalAmount" placeholder="5000" step="0.01"
+                        required />
+                </div>
+                <button type="submit" class="submit-btn">Set Budget</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Popup -->
+    <div class="confirmation-popup" id="confirmationPopup">
+        <div class="confirmation-content">
+            <div class="confirmation-header">
+                <div class="confirmation-icon">⚠️</div>
+                <div class="confirmation-title">Confirm Budget Setting</div>
+                <p class="confirmation-message">
+                    Once you set your monthly budget, it cannot be changed until the end of this month.
+                    Are you sure you want to proceed?
+                </p>
+            </div>
+
+            <div class="confirmation-checkbox">
+                <input type="checkbox" id="agreeCheckbox">
+                <label for="agreeCheckbox">
+                    I understand that the budget will be locked until next month
+                </label>
+            </div>
+
+            <div class="confirmation-buttons">
+                <button class="cancel-btn" id="cancelConfirmBtn">Cancel</button>
+                <button class="confirm-btn" id="confirmBudgetBtn" disabled>Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Already Set Popup -->
+    <div class="modal" id="alreadySetPopup">
+        <div class="modal-content info-popup">
+            <div class="info-icon">⚠️</div>
+            <div class="modal-title" style="text-align: center; margin-bottom: 15px;">Budget Already Set</div>
+            <p class="info-message">You have already entered the budget for this month.</p>
+            <button class="go-back-btn" id="alreadySetGoBack">Go Back</button>
+        </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div class="modal" id="successPopup">
+        <div class="modal-content info-popup">
+            <div class="info-icon">✅</div>
+            <div class="modal-title" style="text-align: center; margin-bottom: 15px;">Budget Set Successfully</div>
+            <p class="info-message">Budget can only be changed once a month and only after the end of the month.</p>
+            <button class="go-back-btn" id="successGoBack">Go Back</button>
+        </div>
+    </div>
+
+    <!-- AI Chat Button & Window -->
+    <button class="ai-chat-btn" id="aiChatBtn">
+        <span class="ai-icon">🤖</span>
+    </button>
+
+    <div class="ai-chat-window" id="aiChatWindow">
+        <div class="ai-chat-header">
+            <div class="ai-header-left">
+                <span class="ai-avatar">🤖</span>
+                <div>
+                    <div class="ai-title">B-Buddy AI</div>
+                    <div class="ai-subtitle">Financial Assistant</div>
+                </div>
+            </div>
+            <button class="ai-close-btn" id="aiCloseBtn">&times;</button>
+        </div>
+
+        <div class="ai-chat-messages" id="aiChatMessages">
+            <div class="ai-message ai-message-bot">
+                <div class="ai-message-avatar">🤖</div>
+                <div class="ai-message-content">
+                    <p>Hi! I'm your B-Buddy AI assistant. I can help you with:</p>
+                    <ul>
+                        <li>💰 Analyzing your spending patterns</li>
+                        <li>📊 Budget optimization tips</li>
+                        <li>💡 Personalized savings advice</li>
+                        <li>📈 Financial goal planning</li>
+                    </ul>
+                    <p>What would you like to know?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-quick-actions">
+            <button class="ai-quick-btn" data-prompt="Analyze my spending this month">
+                📊 Analyze Spending
+            </button>
+            <button class="ai-quick-btn" data-prompt="Give me tips to save more money">
+                💡 Saving Tips
+            </button>
+            <button class="ai-quick-btn" data-prompt="How am I doing with my budget?">
+                🎯 Budget Check
+            </button>
+        </div>
+
+        <div class="ai-chat-input">
+            <input type="text" id="aiChatInput" placeholder="Ask me anything about your finances..." />
+            <button id="aiSendBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+</body>
+
+
+</html>
