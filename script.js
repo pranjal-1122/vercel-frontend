@@ -1,13 +1,13 @@
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyDMRi-j71wruX5UPFg1kB2pbB99q0Sp9qk",
-    authDomain: "b-buddy-4c0a7.firebaseapp.com",
-    databaseURL: "https://b-buddy-4c0a7-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "b-buddy-4c0a7",
-    storageBucket: "b-buddy-4c0a7.firebasestorage.app",
-    messagingSenderId: "1046417860101",
-    appId: "1:1046417860101:web:80dd34f12c5dc06dd65e6c",
-    measurementId: "G-39M5NFMMMQ"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDMRi-j71wruX5UPFg1kB2pbB99q0Sp9qk",
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "b-buddy-4c0a7.firebaseapp.com",
+    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "https://b-buddy-4c0a7-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "b-buddy-4c0a7",
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "b-buddy-4c0a7.firebasestorage.app",
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "1046417860101",
+    appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:1046417860101:web:80dd34f12c5dc06dd65e6c",
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-39M5NFMMMQ"
 };
 
 // Initialize Firebase
